@@ -6,22 +6,26 @@ import { useTaskFilters } from "@/lib/tasks/useTaskFilters";
 import TaskItem from "@/components/tasks/TaskItem";
 import CreateTaskForm from "@/components/tasks/CreateTaskForm";
 import TaskFilters from "@/components/tasks/TaskFilters";
+import Pagination from "@/components/ui/Pagination";
 import Modal from "@/components/ui/Modal";
 
 export default function TaskList() {
-  const { data: tasks, isLoading, isError } = useTasks();
   const [showForm, setShowForm] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
   const {
-    filteredTasks,
+    page, setPage,
+    statusFilter, setStatusFilter,
+    categoryFilter, setCategoryFilter,
+    sortOrder, cycleSortOrder, sortLabel,
+  } = useTaskFilters();
+
+  const { data, isLoading, isError } = useTasks({
+    page,
     statusFilter,
-    setStatusFilter,
     categoryFilter,
-    setCategoryFilter,
     sortOrder,
-    cycleSortOrder,
-    sortLabel,
-  } = useTaskFilters(tasks);
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -63,16 +67,25 @@ export default function TaskList() {
       {isLoading && <p className="text-sm text-gray-500">Loading tasks...</p>}
       {isError && <p className="text-sm text-red-500">Failed to load tasks.</p>}
 
-      {filteredTasks && filteredTasks.length === 0 && (
+      {data && data.tasks.length === 0 && (
         <p className="text-sm text-gray-400">No tasks found.</p>
       )}
 
-      {filteredTasks && filteredTasks.length > 0 && (
-        <div className="flex flex-col gap-4">
-          {filteredTasks.map((task) => (
+      {data && data.tasks.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {data.tasks.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}
         </div>
+      )}
+
+      {data && (
+        <Pagination
+          page={page}
+          totalCount={data.totalCount}
+          pageSize={data.pageSize}
+          onPageChange={setPage}
+        />
       )}
     </div>
   );

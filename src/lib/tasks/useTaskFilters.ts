@@ -1,9 +1,10 @@
 import { useState } from "react";
-import type { Task, TaskCategory, TaskFilter } from "@/types/task";
+import type { TaskCategory, TaskFilter } from "@/types/task";
 
 type SortOrder = "asc" | "desc" | "none";
 
-export function useTaskFilters(tasks: Task[] | undefined) {
+export function useTaskFilters() {
+  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<TaskFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState<TaskCategory | "all">("all");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
@@ -14,25 +15,20 @@ export function useTaskFilters(tasks: Task[] | undefined) {
     );
   }
 
-  const filteredTasks = tasks
-    ?.filter((task) => {
-      const matchesStatus =
-        statusFilter === "completed" ? task.completed :
-        statusFilter === "incomplete" ? !task.completed :
-        true;
+  function handleStatusChange(filter: TaskFilter) {
+    setStatusFilter(filter);
+    setPage(1);
+  }
 
-      return matchesStatus && (categoryFilter === "all" || task.category === categoryFilter);
-    })
-    .sort((a, b) => {
-      if (sortOrder === "none") return 0;
-      if (!a.deadline && !b.deadline) return 0;
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
+  function handleCategoryChange(category: TaskCategory | "all") {
+    setCategoryFilter(category);
+    setPage(1);
+  }
 
-      const diff = new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-
-      return sortOrder === "asc" ? diff : -diff;
-    });
+  function handleSortCycle() {
+    cycleSortOrder();
+    setPage(1);
+  }
 
   const sortLabel =
     sortOrder === "asc" ? "Deadline ↑" :
@@ -40,13 +36,14 @@ export function useTaskFilters(tasks: Task[] | undefined) {
     "Sort by deadline";
 
   return {
-    filteredTasks,
+    page,
+    setPage,
     statusFilter,
-    setStatusFilter,
+    setStatusFilter: handleStatusChange,
     categoryFilter,
-    setCategoryFilter,
+    setCategoryFilter: handleCategoryChange,
     sortOrder,
-    cycleSortOrder,
+    cycleSortOrder: handleSortCycle,
     sortLabel,
   };
 }

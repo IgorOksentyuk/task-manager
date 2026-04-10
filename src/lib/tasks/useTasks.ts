@@ -1,12 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTask, deleteTask, fetchTasks, updateTask } from "@/lib/tasks/taskService";
+import {
+  createTask,
+  deleteTask,
+  fetchTasks,
+  updateTask,
+  type FetchTasksParams,
+} from "@/lib/tasks/taskService";
 import { queryKeys } from "@/lib/queryKeys";
 import type { CreateTaskInput, UpdateTaskInput } from "@/types/task";
 
-export function useTasks() {
+export function useTasks(params: FetchTasksParams) {
   return useQuery({
-    queryKey: queryKeys.tasks,
-    queryFn: fetchTasks,
+    queryKey: queryKeys.tasks(params),
+    queryFn: () => fetchTasks(params),
   });
 }
 
@@ -15,7 +21,7 @@ export function useCreateTask() {
 
   return useMutation({
     mutationFn: (input: CreateTaskInput) => createTask(input),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.tasks }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 }
 
@@ -25,7 +31,7 @@ export function useUpdateTask() {
   return useMutation({
     mutationFn: ({ id, input }: { id: string; input: UpdateTaskInput }) =>
       updateTask(id, input),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.tasks }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 }
 
@@ -34,6 +40,6 @@ export function useDeleteTask() {
 
   return useMutation({
     mutationFn: (id: string) => deleteTask(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.tasks }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 }
