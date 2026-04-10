@@ -5,6 +5,7 @@ type SortOrder = "asc" | "desc" | "none";
 
 export function useTaskFilters() {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<TaskFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState<TaskCategory | "all">("all");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
@@ -13,6 +14,7 @@ export function useTaskFilters() {
     setSortOrder((prev) =>
       prev === "none" ? "asc" : prev === "asc" ? "desc" : "none"
     );
+    setPage(1);
   }
 
   function handleStatusChange(filter: TaskFilter) {
@@ -25,8 +27,8 @@ export function useTaskFilters() {
     setPage(1);
   }
 
-  function handleSortCycle() {
-    cycleSortOrder();
+  function handleSearchChange(value: string) {
+    setSearch(value);
     setPage(1);
   }
 
@@ -38,12 +40,14 @@ export function useTaskFilters() {
   return {
     page,
     setPage,
+    search,
+    setSearch: handleSearchChange,
     statusFilter,
     setStatusFilter: handleStatusChange,
     categoryFilter,
     setCategoryFilter: handleCategoryChange,
     sortOrder,
-    cycleSortOrder: handleSortCycle,
+    cycleSortOrder,
     sortLabel,
   };
 }

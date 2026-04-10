@@ -16,6 +16,7 @@ export type FetchTasksParams = {
   statusFilter: TaskFilter;
   categoryFilter: TaskCategory | "all";
   sortOrder: "asc" | "desc" | "none";
+  search: string;
 };
 
 export type FetchTasksResult = {
@@ -29,12 +30,16 @@ export async function fetchTasks({
   statusFilter,
   categoryFilter,
   sortOrder,
+  search,
 }: FetchTasksParams): Promise<FetchTasksResult> {
   let query = supabase.from("tasks").select("*", { count: "exact" });
 
   if (statusFilter === "completed") query = query.eq("completed", true);
   if (statusFilter === "incomplete") query = query.eq("completed", false);
   if (categoryFilter !== "all") query = query.eq("category", categoryFilter);
+  if (search.trim()) {
+    query = query.or(`title.ilike.%${search.trim()}%,description.ilike.%${search.trim()}%`);
+  }
 
   if (sortOrder !== "none") {
     query = query.order("deadline", {
