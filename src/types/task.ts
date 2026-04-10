@@ -9,3 +9,5 @@ export type Task = {
 
 export type CreateTaskInput = Pick<Task, "title" | "description">;
 export type UpdateTaskInput = Partial<Pick<Task, "title" | "description" | "completed">>;
+
+export type TaskFilter = "all" | "incomplete" | "completed";
