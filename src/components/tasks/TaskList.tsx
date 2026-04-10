@@ -5,24 +5,40 @@ import { useTasks } from "@/lib/tasks/useTasks";
 import TaskItem from "@/components/tasks/TaskItem";
 import CreateTaskForm from "@/components/tasks/CreateTaskForm";
 import TaskFilterTabs from "@/components/tasks/TaskFilterTabs";
-import type { TaskFilter } from "@/types/task";
+import TaskCategoryFilterTabs from "@/components/tasks/TaskCategoryFilterTabs";
+import type { TaskCategory, TaskFilter } from "@/types/task";
 
 export default function TaskList() {
   const { data: tasks, isLoading, isError } = useTasks();
-  const [filter, setFilter] = useState<TaskFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<TaskFilter>("all");
+  const [categoryFilter, setCategoryFilter] = useState<TaskCategory | "all">("all");
 
   const filteredTasks = tasks?.filter((task) => {
-    if (filter === "completed") return task.completed;
-    if (filter === "incomplete") return !task.completed;
+    const matchesStatus =
+      statusFilter === "completed" ? task.completed :
+      statusFilter === "incomplete" ? !task.completed :
+      true;
 
-    return true;
+    const matchesCategory = categoryFilter === "all" || task.category === categoryFilter;
+
+    return matchesStatus && matchesCategory;
   });
 
   return (
     <div className="flex flex-col gap-6">
       <CreateTaskForm />
 
-      <TaskFilterTabs active={filter} onChange={setFilter} />
+      <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-gray-400 w-16 shrink-0">Status</span>
+          <TaskFilterTabs active={statusFilter} onChange={setStatusFilter} />
+        </div>
+        <div className="h-px bg-gray-100" />
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-gray-400 w-16 shrink-0">Category</span>
+          <TaskCategoryFilterTabs active={categoryFilter} onChange={setCategoryFilter} />
+        </div>
+      </div>
 
       {isLoading && <p className="text-sm text-gray-500">Loading tasks...</p>}
 
