@@ -5,7 +5,11 @@ import { TASK_CATEGORIES } from "@/constants/taskCategories";
 import type { TaskCategory } from "@/types/task";
 import { useState } from "react";
 
-export default function CreateTaskForm({ onSuccess }: { onSuccess?: () => void }) {
+export default function CreateTaskForm({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<TaskCategory>("work");
@@ -32,12 +36,15 @@ export default function CreateTaskForm({ onSuccess }: { onSuccess?: () => void }
           setDeadline("");
           onSuccess?.();
         },
-      }
+      },
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4 bg-white border border-gray-200 rounded-xl">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-3 bg-white rounded-xl"
+    >
       <input
         type="text"
         value={title}
@@ -73,7 +80,7 @@ export default function CreateTaskForm({ onSuccess }: { onSuccess?: () => void }
       <button
         type="submit"
         disabled={createTask.isPending || !title.trim()}
-        className="bg-gray-900 text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-700 disabled:opacity-50 transition cursor-pointer"
+        className="bg-gray-900 text-white rounded-lg px-4 py-2 mt-4 text-sm font-medium hover:bg-gray-700 disabled:opacity-50 transition cursor-pointer"
       >
         {createTask.isPending ? "Adding..." : "Add task"}
       </button>

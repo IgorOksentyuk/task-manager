@@ -3,12 +3,15 @@
 import { TASK_FILTERS } from "@/constants/taskFilters";
 import type { TaskFilter } from "@/types/task";
 
-type TaskFilterTabsProps = {
+type TaskStatusFilterTabsProps = {
   active: TaskFilter;
   onChange: (filter: TaskFilter) => void;
 };
 
-export default function TaskFilterTabs({ active, onChange }: TaskFilterTabsProps) {
+export default function TaskStatusFilterTabs({
+  active,
+  onChange,
+}: TaskStatusFilterTabsProps) {
   return (
     <div className="flex gap-2">
       {TASK_FILTERS.map(({ label, value }) => (
