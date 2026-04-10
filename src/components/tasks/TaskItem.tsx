@@ -35,9 +35,16 @@ export default function TaskItem({ task }: TaskItemProps) {
         {task.description && (
           <p className="text-sm text-gray-500 mt-0.5">{task.description}</p>
         )}
-        <span className="inline-block mt-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 capitalize">
-          {task.category}
-        </span>
+        <div className="flex items-center gap-2 mt-1.5">
+          <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 capitalize">
+            {task.category}
+          </span>
+          {task.deadline && (
+            <span className="text-xs text-gray-400">
+              Due {new Date(task.deadline).toLocaleDateString()}
+            </span>
+          )}
+        </div>
       </div>
 
       <button

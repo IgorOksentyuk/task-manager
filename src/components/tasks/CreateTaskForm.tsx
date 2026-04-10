@@ -9,6 +9,7 @@ export default function CreateTaskForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<TaskCategory>("work");
+  const [deadline, setDeadline] = useState("");
   const createTask = useCreateTask();
 
   function handleSubmit(e: React.FormEvent) {
@@ -17,12 +18,18 @@ export default function CreateTaskForm() {
     if (!title.trim()) return;
 
     createTask.mutate(
-      { title: title.trim(), description: description.trim() || null, category },
+      {
+        title: title.trim(),
+        description: description.trim() || null,
+        category,
+        deadline: deadline || null,
+      },
       {
         onSuccess: () => {
           setTitle("");
           setDescription("");
           setCategory("work");
+          setDeadline("");
         },
       }
     );
@@ -56,6 +63,12 @@ export default function CreateTaskForm() {
           </option>
         ))}
       </select>
+      <input
+        type="date"
+        value={deadline}
+        onChange={(e) => setDeadline(e.target.value)}
+        className="border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition"
+      />
       <button
         type="submit"
         disabled={createTask.isPending || !title.trim()}
