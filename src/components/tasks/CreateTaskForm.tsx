@@ -5,7 +5,7 @@ import { TASK_CATEGORIES } from "@/constants/taskCategories";
 import type { TaskCategory } from "@/types/task";
 import { useState } from "react";
 
-export default function CreateTaskForm() {
+export default function CreateTaskForm({ onSuccess }: { onSuccess?: () => void }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<TaskCategory>("work");
@@ -30,6 +30,7 @@ export default function CreateTaskForm() {
           setDescription("");
           setCategory("work");
           setDeadline("");
+          onSuccess?.();
         },
       }
     );

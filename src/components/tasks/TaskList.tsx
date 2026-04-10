@@ -1,14 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { useTaskFilters } from "@/lib/tasks/useTaskFilters";
 import TaskItem from "@/components/tasks/TaskItem";
 import CreateTaskForm from "@/components/tasks/CreateTaskForm";
-import TaskFilterTabs from "@/components/tasks/TaskFilterTabs";
-import TaskCategoryFilterTabs from "@/components/tasks/TaskCategoryFilterTabs";
+import TaskFilters from "@/components/tasks/TaskFilters";
 
 export default function TaskList() {
   const { data: tasks, isLoading, isError } = useTasks();
+  const [showForm, setShowForm] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const {
     filteredTasks,
     statusFilter,
@@ -22,40 +24,37 @@ export default function TaskList() {
 
   return (
     <div className="flex flex-col gap-6">
-      <CreateTaskForm />
-
-      <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-gray-400 w-16 shrink-0">
-            Status
-          </span>
-          <TaskFilterTabs active={statusFilter} onChange={setStatusFilter} />
-        </div>
-        <div className="h-px bg-gray-100" />
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-gray-400 w-16 shrink-0">
-            Category
-          </span>
-          <TaskCategoryFilterTabs
-            active={categoryFilter}
-            onChange={setCategoryFilter}
-          />
-        </div>
-        <div className="h-px bg-gray-100" />
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-gray-400 w-16 shrink-0">
-            Sort
-          </span>
+      <div className="flex gap-3 justify-between items-center">
+        <div className="flex flex-col gap-3">
           <button
-            onClick={cycleSortOrder}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ${
-              sortOrder !== "none"
-                ? "bg-gray-900 text-white"
-                : "bg-white border border-gray-200 text-gray-600 hover:border-gray-400"
-            }`}
+            onClick={() => setShowForm((prev) => !prev)}
+            className="self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 transition cursor-pointer"
           >
-            {sortLabel}
+            {showForm ? "Cancel" : "+ Add task"}
           </button>
+
+          {showForm && <CreateTaskForm onSuccess={() => setShowForm(false)} />}
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="self-start px-3 py-1.5 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-600 hover:border-gray-400 transition cursor-pointer"
+          >
+            {showFilters ? "Hide filters" : "Show filters"}
+          </button>
+
+          {showFilters && (
+            <TaskFilters
+              statusFilter={statusFilter}
+              onStatusChange={setStatusFilter}
+              categoryFilter={categoryFilter}
+              onCategoryChange={setCategoryFilter}
+              sortOrder={sortOrder}
+              onSortCycle={cycleSortOrder}
+              sortLabel={sortLabel}
+            />
+          )}
         </div>
       </div>
 
