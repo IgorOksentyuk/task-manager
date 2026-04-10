@@ -14,9 +14,13 @@ export default function TaskList() {
   const [showFilters, setShowFilters] = useState(false);
   const {
     filteredTasks,
-    statusFilter, setStatusFilter,
-    categoryFilter, setCategoryFilter,
-    sortOrder, cycleSortOrder, sortLabel,
+    statusFilter,
+    setStatusFilter,
+    categoryFilter,
+    setCategoryFilter,
+    sortOrder,
+    cycleSortOrder,
+    sortLabel,
   } = useTaskFilters(tasks);
 
   return (
@@ -64,7 +68,7 @@ export default function TaskList() {
       )}
 
       {filteredTasks && filteredTasks.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           {filteredTasks.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}

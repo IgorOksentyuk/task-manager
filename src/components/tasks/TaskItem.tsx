@@ -29,13 +29,15 @@ export default function TaskItem({ task }: TaskItemProps) {
       />
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium text-gray-900 ${task.completed ? "line-through text-gray-400" : ""}`}>
+        <p
+          className={`text-sm font-medium text-gray-900 ${task.completed ? "line-through text-gray-400" : ""}`}
+        >
           {task.title}
         </p>
         {task.description && (
           <p className="text-sm text-gray-500 mt-0.5">{task.description}</p>
         )}
-        <div className="flex items-center gap-2 mt-1.5">
+        <div className="flex items-center justify-between gap-2 mt-1.5">
           <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 capitalize">
             {task.category}
           </span>

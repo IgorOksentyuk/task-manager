@@ -25,7 +25,7 @@ export default function Modal({ title, onClose, children }: ModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-lg w-full max-w-lg mx-4 p-6 flex flex-col gap-4"
+        className="bg-white rounded-2xl shadow-lg w-full max-w-lg mx-4 p-6 flex flex-col gap-4 max-w-[calc(100vw-2rem)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">

@@ -13,7 +13,7 @@ export default function TaskStatusFilterTabs({
   onChange,
 }: TaskStatusFilterTabsProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-x-auto scrollbar-none">
       {TASK_FILTERS.map(({ label, value }) => (
         <button
           key={value}

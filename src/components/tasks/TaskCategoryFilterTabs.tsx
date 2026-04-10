@@ -8,9 +8,12 @@ type TaskCategoryFilterTabsProps = {
   onChange: (category: TaskCategory | "all") => void;
 };
 
-export default function TaskCategoryFilterTabs({ active, onChange }: TaskCategoryFilterTabsProps) {
+export default function TaskCategoryFilterTabs({
+  active,
+  onChange,
+}: TaskCategoryFilterTabsProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-x-auto scrollbar-none">
       {TASK_CATEGORY_FILTERS.map(({ label, value }) => (
         <button
           key={value}
