@@ -1,11 +1,14 @@
 "use client";
 
 import { useCreateTask } from "@/lib/tasks/useTasks";
+import { TASK_CATEGORIES } from "@/constants/taskCategories";
+import type { TaskCategory } from "@/types/task";
 import { useState } from "react";
 
 export default function CreateTaskForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState<TaskCategory>("work");
   const createTask = useCreateTask();
 
   function handleSubmit(e: React.FormEvent) {
@@ -14,11 +17,12 @@ export default function CreateTaskForm() {
     if (!title.trim()) return;
 
     createTask.mutate(
-      { title: title.trim(), description: description.trim() || null },
+      { title: title.trim(), description: description.trim() || null, category },
       {
         onSuccess: () => {
           setTitle("");
           setDescription("");
+          setCategory("work");
         },
       }
     );
@@ -41,6 +45,17 @@ export default function CreateTaskForm() {
         placeholder="Description (optional)"
         className="border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition"
       />
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value as TaskCategory)}
+        className="border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition"
+      >
+        {TASK_CATEGORIES.map(({ label, value }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
       <button
         type="submit"
         disabled={createTask.isPending || !title.trim()}

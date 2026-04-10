@@ -35,6 +35,9 @@ export default function TaskItem({ task }: TaskItemProps) {
         {task.description && (
           <p className="text-sm text-gray-500 mt-0.5">{task.description}</p>
         )}
+        <span className="inline-block mt-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 capitalize">
+          {task.category}
+        </span>
       </div>
 
       <button
